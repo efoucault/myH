@@ -15,26 +15,21 @@ class ItemsController < ApplicationController
 
   def create
     @item = Item.new(item_params)
-    @user = current_user
-    if @item.save
-      @item.save!
-      redirect_to user_item_path(@user, @item)
-    else
-      @item.errors.messages
-      render "items/new"
-    end
+    @item.user = current_user
+    @item.save!
+    redirect_to user_item_path(@item.user, @item)
   end
 
   def edit
-    @user = User.find(params[:user_id])
     @item = Item.find(params[:id])
+    @item.user = User.find(params[:user_id])
   end
 
   def update
-    @user = User.find(params[:user_id])
+    @item.user = User.find(params[:user_id])
     @item = Item.find(params[:id])
     @item.update(item_params)
-    redirect_to user_item_path(@user, @item)
+    redirect_to user_item_path(@item.user, @item)
   end
 
   def destroy
