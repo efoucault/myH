@@ -1,5 +1,5 @@
 <h3>Edit item</h3>
-<%= simple_form_for [@user, @item] do |f| %>
+<%= simple_form_for [@item.user, @item] do |f| %>
   <%= f.input :titre %>
   <%= f.input :artiste %>
   <%= f.input :note %>
