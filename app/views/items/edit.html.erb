@@ -1,6 +1,6 @@
 <h3>Edit item</h3>
 <%= simple_form_for [@item.user, @item] do |f| %>
-  <%= f.input :categorie, collection: ["Canada", "United States"] %>
+  <%= f.input :categorie, collection: ["Musique", "Films", "Livres"] %>
   <%= f.input :titre %>
   <%= f.input :artiste %>
   <%= f.input :note %>
