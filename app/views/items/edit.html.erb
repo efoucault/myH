@@ -1,9 +1,11 @@
 <h3>Edit item</h3>
 <%= simple_form_for [@item.user, @item] do |f| %>
+  <%= f.input :categorie, collection: ["Canada", "United States"] %>
   <%= f.input :titre %>
   <%= f.input :artiste %>
   <%= f.input :note %>
   <%= f.input :commentaire %>
   <%= f.input :age %>
+  <%= f.input :photo %>
   <%= f.submit "Mettre à jour l'item" %>
 <% end %>
