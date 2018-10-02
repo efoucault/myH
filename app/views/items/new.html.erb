@@ -2,6 +2,7 @@
 <p class="tmdb_key" data-tmdb="<%= "#{ENV['TMDB_KEY']}" %>"></p>
 <p class="spotify_key" data-spotify="<%= ENV['KEY_SPOTIFY_KEY'] %>" ></p>
 <%= simple_form_for [@user, @item] do |f| %>
+  <%= f.input :categorie, collection: ["Canada", "United States"] %>
   <%= f.input :titre %>
   <p><%= f.input :artiste, class: "artiste" %></p>
   <%= f.input :note %>
