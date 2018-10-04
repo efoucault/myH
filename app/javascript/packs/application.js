@@ -11,8 +11,11 @@ categorie.addEventListener('blur', (evt) => {
   else if (categorie.value === "Films") {
     CallTmdb();
   }
+  else if (categorie.value === "Livres") {
+    CallGoogleBooks();
+  }
   else {
-    console.log("c'est autre chose")
+    console.log("nada");
   }
 });
 
@@ -57,4 +60,20 @@ function CallTmdb() {
   });
 }
 
-
+  // Fetch le nom d'un livre
+function CallGoogleBooks() {
+  const titreLivre = document.querySelector("#item_titre");
+  titreLivre.addEventListener('blur', (evt) => {
+    evt.preventDefault();
+    const bookKey = document.querySelector('.googlebook_key').dataset.google;
+    const commentaire = document.querySelector("#item_commentaire");
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=${titreLivre.value}+intitle:keyes&key=${bookKey}`, {
+       method: "GET",
+       })
+       .then(response => response.json())
+       .then((data) => {
+         console.log(data.items[0].volumeInfo.description);
+         commentaire.value = data.items[0].volumeInfo.description
+       });
+  });
+}

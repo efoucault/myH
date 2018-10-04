@@ -1,6 +1,7 @@
 <h3>Nouvel item</h3>
 <p class="tmdb_key" data-tmdb="<%= "#{ENV['TMDB_KEY']}" %>"></p>
 <p class="spotify_key" data-spotify="<%= ENV['KEY_SPOTIFY_KEY'] %>" ></p>
+<p class="googlebook_key" data-google="<%= "#{ENV['GOOGLE_BOOK']}" %>" ></p>
 <%= simple_form_for [@user, @item] do |f| %>
   <p id="categorie"><%= f.input :categorie, collection: ["Musique", "Films", "Livres"] %></p>
   <%= f.input :titre %>
