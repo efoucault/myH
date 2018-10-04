@@ -1,21 +1,29 @@
 import "bootstrap";
 
 // Catégorie sélectionnée
-const categorie = document.querySelector("#item_categorie");
-categorie.addEventListener('blur', (evt) => {
+const searchButton = document.querySelector("#search-button");
+const categorie = document.querySelector("#domaine");
+const type = document.querySelector("#type");
+const contenu = document.querySelector("#contenu");
+searchButton.addEventListener('click', (evt) => {
   evt.preventDefault();
-  console.log(categorie.value);
   if (categorie.value === "Musique") {
     console.log("c'est de la musique")
   }
-  else if (categorie.value === "Films") {
-    CallTmdb();
+  else if (categorie.value === "Films" && type.value === "Artiste") {
+    CallTmdb(contenu);
   }
-  else if (categorie.value === "Livres") {
-    CallGoogleBooks();
+  else if (categorie.value === "Films" && type.value === "Titre") {
+    CallTmdb(contenu);
+  }
+  else if (categorie.value === "Livres" && type.value === "Artiste") {
+    CallGoogleBooks(contenu.value, "inauthor");
+  }
+  else if (categorie.value === "Livres" && type.value === "Titre") {
+    CallGoogleBooks(contenu.value.replace(' ', '+'), "intitle");
   }
   else {
-    console.log("nada");
+    console.log("Chelou");
   }
 });
 
@@ -42,7 +50,7 @@ function CallSpotify() {
   });
 }
 
-  // Fetch le nom d'un film
+  // Fetch un film par nom
 function CallTmdb() {
   const artiste = document.querySelector("#item_artiste");
   artiste.addEventListener('blur', (evt) => {
@@ -60,20 +68,28 @@ function CallTmdb() {
   });
 }
 
-  // Fetch le nom d'un livre
-function CallGoogleBooks() {
-  const titreLivre = document.querySelector("#item_titre");
-  titreLivre.addEventListener('blur', (evt) => {
-    evt.preventDefault();
-    const bookKey = document.querySelector('.googlebook_key').dataset.google;
-    const commentaire = document.querySelector("#item_commentaire");
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=${titreLivre.value}+intitle:keyes&key=${bookKey}`, {
-       method: "GET",
-       })
-       .then(response => response.json())
-       .then((data) => {
-         console.log(data.items[0].volumeInfo.description);
-         commentaire.value = data.items[0].volumeInfo.description
-       });
-  });
+  // Fetch un livre par titre ou auteur
+function CallGoogleBooks(contenu, recherchePar) {
+  const resultats = document.querySelector(".resultats")
+  const bookKey = document.querySelector('.googlebook_key').dataset.google;
+  fetch(`https://www.googleapis.com/books/v1/volumes?q=${contenu}&key=${bookKey}`, {
+     method: "GET",
+     })
+     .then(response => response.json())
+     .then((data) => {
+       // console.log(`https://www.googleapis.com/books/v1/volumes?q=${contenu}&key=${bookKey}`);
+       var compteur;
+       for (compteur = 0; compteur < 5; compteur++) {
+        // Runs 5 times, with values of step 0 through 4.
+         const titre = data.items[compteur].volumeInfo.title;
+         console.log(data.items[compteur].volumeInfo.imageLinks)
+         var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
+         if (data.items[compteur].volumeInfo.imageLinks !== undefined) {
+            thumbnail = data.items[compteur].volumeInfo.imageLinks.thumbnail;
+         }
+         console.log(data.items[compteur].volumeInfo.subtitle);
+         console.log(data.items[compteur].volumeInfo.description);
+         resultats.insertAdjacentHTML("afterbegin", `<div class="resultat"><img src="${thumbnail}" width="50%" height="80%" alt=""><p>${titre}</p></div>`);
+       }
+     });
 }

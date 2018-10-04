@@ -1,9 +1,36 @@
 <h3>Nouvel item</h3>
+
+<!-- Barre de recherche -->
+<div class="searchbar">
+  <label for="" >Domaine</label>
+  <input list="domaines" id="domaine"></input>
+  <label for="">Type</label>
+  <input list="types" id="type"></input>
+  <label for="">Contenu</label>
+  <input type="text" id="contenu"></input>
+  <p class="btn btn-primary" id="search-button">Search</p><br>
+</div>
+
+<datalist id="domaines">
+  <option>Musique</option>
+  <option>Films</option>
+  <option>Livres</option>
+</datalist>
+
+<datalist id="types">
+  <option>Artiste</option>
+  <option>Titre</option>
+</datalist>
+
+<!-- Liste des 5 premiers résultats -->
+<div class="resultats">
+</div>
+
+<!-- Formulaire de saisie des infos de l'item -->
 <p class="tmdb_key" data-tmdb="<%= "#{ENV['TMDB_KEY']}" %>"></p>
 <p class="spotify_key" data-spotify="<%= ENV['KEY_SPOTIFY_KEY'] %>" ></p>
 <p class="googlebook_key" data-google="<%= "#{ENV['GOOGLE_BOOK']}" %>" ></p>
 <%= simple_form_for [@user, @item] do |f| %>
-  <p id="categorie"><%= f.input :categorie, collection: ["Musique", "Films", "Livres"] %></p>
   <%= f.input :titre %>
   <p><%= f.input :artiste, class: "artiste" %></p>
   <%= f.input :note %>
