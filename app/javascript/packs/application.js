@@ -16,11 +16,8 @@ searchButton.addEventListener('click', (evt) => {
   else if (categorie.value === "Films" && type.value === "Titre") {
     CallTmdb(contenu);
   }
-  else if (categorie.value === "Livres" && type.value === "Artiste") {
-    CallGoogleBooks(contenu.value, "inauthor");
-  }
-  else if (categorie.value === "Livres" && type.value === "Titre") {
-    CallGoogleBooks(contenu.value.replace(' ', '+'), "intitle");
+  else if (categorie.value === "Livres") {
+    CallGoogleBooks(contenu.value);
   }
   else {
     console.log("Chelou");
@@ -69,7 +66,7 @@ function CallTmdb() {
 }
 
   // Fetch un livre par titre ou auteur
-function CallGoogleBooks(contenu, recherchePar) {
+function CallGoogleBooks(contenu) {
   const resultats = document.querySelector(".resultats")
   const bookKey = document.querySelector('.googlebook_key').dataset.google;
   fetch(`https://www.googleapis.com/books/v1/volumes?q=${contenu}&key=${bookKey}`, {
@@ -82,14 +79,36 @@ function CallGoogleBooks(contenu, recherchePar) {
        for (compteur = 0; compteur < 5; compteur++) {
         // Runs 5 times, with values of step 0 through 4.
          const titre = data.items[compteur].volumeInfo.title;
-         console.log(data.items[compteur].volumeInfo.imageLinks)
+         // console.log(data.items[compteur].volumeInfo.imageLinks)
          var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
          if (data.items[compteur].volumeInfo.imageLinks !== undefined) {
             thumbnail = data.items[compteur].volumeInfo.imageLinks.thumbnail;
          }
-         console.log(data.items[compteur].volumeInfo.subtitle);
-         console.log(data.items[compteur].volumeInfo.description);
-         resultats.insertAdjacentHTML("afterbegin", `<div class="resultat"><img src="${thumbnail}" width="50%" height="80%" alt=""><p>${titre}</p></div>`);
+         // console.log(data.items[compteur].volumeInfo.subtitle);
+         // console.log(data.items[compteur].volumeInfo.description);
+         resultats.insertAdjacentHTML("afterbegin", `<div class="resultat" data-compteur="${compteur}"><img src="${thumbnail}" width="50%" height="80%" alt=""><p>${titre}</p></div>`);
+         ClickItem(data);
        }
      });
 }
+
+// Clic sur un résultat
+function ClickItem(data) {
+  const resultatsCliques = document.querySelectorAll(".resultat");
+  var commentaire = document.querySelector("#item_commentaire");
+  var titre = document.querySelector("#item_titre");
+  var artiste = document.querySelector("#item_artiste");
+  var commentaire = document.querySelector("#item_commentaire");
+  if (resultatsCliques !== null) {
+    resultatsCliques.forEach((resultat) => {
+      resultat.addEventListener("click", (event) => {
+        console.log(data)
+        const index = event.currentTarget.dataset.compteur;
+        commentaire.value = data.items[index].volumeInfo.description
+        titre.value = data.items[index].volumeInfo.title + " - " + data.items[index].volumeInfo.subtitle
+        artiste.value = data.items[index].volumeInfo.authors[0]
+      });
+    });
+  }
+}
+
