@@ -14,7 +14,6 @@ searchButton.addEventListener('click', (evt) => {
     CallTmdb(contenu.value);
   }
   else if (categorie.value === "Films" && type.value === "Titre") {
-    console.log(contenu.value.replace(" ", "%20"));
     CallTmdb(contenu.value.replace(" ", "%20"));
   }
   else if (categorie.value === "Livres") {
@@ -24,6 +23,14 @@ searchButton.addEventListener('click', (evt) => {
     console.log("Chelou");
   }
 });
+
+function deleteExistingResults() {
+  // const resultats = document.querySelector(".resultats");
+  const resultats = document.querySelectorAll(".resultat");
+  resultats.forEach((resultat) => {
+    resultat.parentNode.removeChild(resultat);
+  });
+}
 
 // Si categorie = Musique Fetch le nom d'un artiste
 function CallSpotify() {
@@ -58,6 +65,7 @@ function CallTmdb(contenu) {
      })
      .then(response => response.json())
      .then((data) => {
+       deleteExistingResults();
        var compteur;
        for (compteur = 4; compteur >= 0; compteur--) {
          const thumbnail = movieThumbnail(data, compteur);
@@ -88,20 +96,31 @@ function CallGoogleBooks(contenu) {
      })
      .then(response => response.json())
      .then((data) => {
+       deleteExistingResults()
        var compteur;
        for (compteur = 4; compteur >= 0; compteur--) {
          const titre = data.items[compteur].volumeInfo.title;
-         var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
-         if (data.items[compteur].volumeInfo.imageLinks !== undefined) {
-            thumbnail = data.items[compteur].volumeInfo.imageLinks.thumbnail;
-         }
+         const thumbnail = bookThumbnail(data, compteur)
+         // var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
+         // if (data.items[compteur].volumeInfo.imageLinks !== undefined) {
+         //    thumbnail = data.items[compteur].volumeInfo.imageLinks.thumbnail;
+         // }
          resultats.insertAdjacentHTML("afterbegin", `<div class="resultat" data-compteur="${compteur}"><img src="${thumbnail}" width="50%" height="80%" alt=""><p>${titre}</p></div>`);
          ClickItem("Livres", data);
        }
      });
 }
 
-// Clic sur un résultat
+// Get Book thumbnail
+function bookThumbnail(data, compteur) {
+   var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
+   if (data.items[compteur].volumeInfo.imageLinks !== undefined) {
+      thumbnail = data.items[compteur].volumeInfo.imageLinks.thumbnail;
+   }
+  return thumbnail;
+}
+
+// Au clic sur un des 5 résultats, alimentation des données de l'item
 function ClickItem(domaine, data) {
   const resultatsCliques = document.querySelectorAll(".resultat");
   var commentaire = document.querySelector("#item_commentaire");
@@ -123,7 +142,7 @@ function ClickItem(domaine, data) {
           commentaire.value = data.items[index].volumeInfo.description;
           titre.value = data.items[index].volumeInfo.title + " - " + data.items[index].volumeInfo.subtitle;
           artiste.value = data.items[index].volumeInfo.authors[0];
-          photo.value = movieThumbnail(data, index);
+          photo.value = bookThumbnail(data, index)
         }
         else if (domaine === "Musique") {
           console.log("Musique");
