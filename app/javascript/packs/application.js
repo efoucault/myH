@@ -11,10 +11,11 @@ searchButton.addEventListener('click', (evt) => {
     console.log("c'est de la musique")
   }
   else if (categorie.value === "Films" && type.value === "Artiste") {
-    CallTmdb(contenu);
+    CallTmdb(contenu.value);
   }
   else if (categorie.value === "Films" && type.value === "Titre") {
-    CallTmdb(contenu);
+    console.log(contenu.value.replace(" ", "%20"));
+    CallTmdb(contenu.value.replace(" ", "%20"));
   }
   else if (categorie.value === "Livres") {
     CallGoogleBooks(contenu.value);
@@ -48,21 +49,29 @@ function CallSpotify() {
 }
 
   // Fetch un film par nom
-function CallTmdb() {
-  const artiste = document.querySelector("#item_artiste");
-  artiste.addEventListener('blur', (evt) => {
-    evt.preventDefault();
-    const movieKey = document.querySelector('.tmdb_key').dataset.tmdb;
-    const commentaire = document.querySelector("#item_commentaire");
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${movieKey}&language=en-US&query=${artiste.value}&page=1&include_adult=false`, {
-       method: "GET",
-       })
-       .then(response => response.json())
-       .then((data) => {
-         console.log(data.results[0].overview);
-         commentaire.value = data.results[0].overview
-       });
-  });
+function CallTmdb(contenu) {
+  const resultats = document.querySelector(".resultats")
+  const movieKey = document.querySelector('.tmdb_key').dataset.tmdb;
+  const commentaire = document.querySelector("#item_commentaire");
+  fetch(`https://api.themoviedb.org/3/search/movie?api_key=${movieKey}&language=fr&query=${contenu}&page=1&include_adult=false`, {
+     method: "GET",
+     })
+     .then(response => response.json())
+     .then((data) => {
+       console.log(data.results[0].poster_path);
+       var compteur;
+       for (compteur = 4; compteur >= 0; compteur--) {
+         const posterPath = data.results[compteur].poster_path
+         var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
+         const titre = data.results[compteur].title
+         if (posterPath !== null) {
+           thumbnail = `http://image.tmdb.org/t/p/w185${posterPath}`;
+           console.log(thumbnail)
+         }
+         resultats.insertAdjacentHTML("afterbegin", `<div class="resultat" data-compteur="${compteur}"><img src="${thumbnail}" width="50%" height="80%" alt=""><p>${titre}</p></div>`);
+         commentaire.value = data.results[0].overview;
+       }
+     });
 }
 
   // Fetch un livre par titre ou auteur
@@ -76,7 +85,7 @@ function CallGoogleBooks(contenu) {
      .then((data) => {
        // console.log(`https://www.googleapis.com/books/v1/volumes?q=${contenu}&key=${bookKey}`);
        var compteur;
-       for (compteur = 0; compteur < 5; compteur++) {
+       for (compteur = 4; compteur >= 0; compteur--) {
         // Runs 5 times, with values of step 0 through 4.
          const titre = data.items[compteur].volumeInfo.title;
          // console.log(data.items[compteur].volumeInfo.imageLinks)
