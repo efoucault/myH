@@ -58,20 +58,25 @@ function CallTmdb(contenu) {
      })
      .then(response => response.json())
      .then((data) => {
-       console.log(data.results[0].poster_path);
        var compteur;
        for (compteur = 4; compteur >= 0; compteur--) {
-         const posterPath = data.results[compteur].poster_path
-         var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
+         const thumbnail = movieThumbnail(data, compteur);
          const titre = data.results[compteur].title
-         if (posterPath !== null) {
-           thumbnail = `http://image.tmdb.org/t/p/w185${posterPath}`;
-           console.log(thumbnail)
-         }
          resultats.insertAdjacentHTML("afterbegin", `<div class="resultat" data-compteur="${compteur}"><img src="${thumbnail}" width="50%" height="80%" alt=""><p>${titre}</p></div>`);
-         commentaire.value = data.results[0].overview;
+         ClickItem("Films", data);
        }
      });
+}
+
+// Get Movie thumbnail
+function movieThumbnail(data, compteur) {
+  const posterPath = data.results[compteur].poster_path
+  var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
+  const titre = data.results[compteur].title
+  if (posterPath !== null) {
+    thumbnail = `http://image.tmdb.org/t/p/w185${posterPath}`;
+  }
+  return thumbnail;
 }
 
   // Fetch un livre par titre ou auteur
@@ -83,39 +88,49 @@ function CallGoogleBooks(contenu) {
      })
      .then(response => response.json())
      .then((data) => {
-       // console.log(`https://www.googleapis.com/books/v1/volumes?q=${contenu}&key=${bookKey}`);
        var compteur;
        for (compteur = 4; compteur >= 0; compteur--) {
-        // Runs 5 times, with values of step 0 through 4.
          const titre = data.items[compteur].volumeInfo.title;
-         // console.log(data.items[compteur].volumeInfo.imageLinks)
          var thumbnail = "https://books.google.fr/googlebooks/images/no_cover_thumb.gif"
          if (data.items[compteur].volumeInfo.imageLinks !== undefined) {
             thumbnail = data.items[compteur].volumeInfo.imageLinks.thumbnail;
          }
-         // console.log(data.items[compteur].volumeInfo.subtitle);
-         // console.log(data.items[compteur].volumeInfo.description);
          resultats.insertAdjacentHTML("afterbegin", `<div class="resultat" data-compteur="${compteur}"><img src="${thumbnail}" width="50%" height="80%" alt=""><p>${titre}</p></div>`);
-         ClickItem(data);
+         ClickItem("Livres", data);
        }
      });
 }
 
 // Clic sur un résultat
-function ClickItem(data) {
+function ClickItem(domaine, data) {
   const resultatsCliques = document.querySelectorAll(".resultat");
   var commentaire = document.querySelector("#item_commentaire");
   var titre = document.querySelector("#item_titre");
   var artiste = document.querySelector("#item_artiste");
   var commentaire = document.querySelector("#item_commentaire");
+  var photo = document.querySelector("#item_photo");
   if (resultatsCliques !== null) {
     resultatsCliques.forEach((resultat) => {
       resultat.addEventListener("click", (event) => {
-        console.log(data)
         const index = event.currentTarget.dataset.compteur;
-        commentaire.value = data.items[index].volumeInfo.description
-        titre.value = data.items[index].volumeInfo.title + " - " + data.items[index].volumeInfo.subtitle
-        artiste.value = data.items[index].volumeInfo.authors[0]
+        if (domaine === "Films") {
+          commentaire.value = data.results[index].overview;
+          titre.value = data.results[index].title;
+          artiste.value = "A ajouter";
+          photo.value = movieThumbnail(data, index);
+        }
+        else if (domaine === "Livres") {
+          commentaire.value = data.items[index].volumeInfo.description;
+          titre.value = data.items[index].volumeInfo.title + " - " + data.items[index].volumeInfo.subtitle;
+          artiste.value = data.items[index].volumeInfo.authors[0];
+          photo.value = movieThumbnail(data, index);
+        }
+        else if (domaine === "Musique") {
+          console.log("Musique");
+        }
+        else {
+          console.log("chelou")
+        }
       });
     });
   }
