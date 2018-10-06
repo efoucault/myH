@@ -1,33 +1,36 @@
-<div class="container">
-  <h3>Nouvel item</h3>
+<div class="card" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1495446815901-a7297e633e8d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=3ad3ef89775ee46b86723c2fa64b6805&auto=format&fit=crop&w=1350&q=80');">
+  <div class="card-description">
+    <h2>Créer un nouvel item</h2>
+    <div class="searchbar">
+      <input list="domaines" id="domaine" placeholder="Domaine"></input>
+      <input list="types" id="type" placeholder="Type"></input>
+      <input type="text" id="contenu" placeholder="Contenu"></input>
+      <p class="btn btn-primary" id="search-button">Search</p><br>
+    </div>
 
-  <!-- Barre de recherche -->
-  <div class="searchbar">
-    <label for="" >Domaine</label>
-    <input list="domaines" id="domaine"></input>
-    <label for="">Type</label>
-    <input list="types" id="type"></input>
-    <label for="">Contenu</label>
-    <input type="text" id="contenu"></input>
-    <p class="btn btn-primary" id="search-button">Search</p><br>
+    <datalist id="domaines">
+      <option>Musique</option>
+      <option>Films</option>
+      <option>Livres</option>
+    </datalist>
+
+    <datalist id="types">
+      <option>Artiste</option>
+      <option>Titre</option>
+    </datalist>
   </div>
+</div>
 
-  <datalist id="domaines">
-    <option>Musique</option>
-    <option>Films</option>
-    <option>Livres</option>
-  </datalist>
-
-  <datalist id="types">
-    <option>Artiste</option>
-    <option>Titre</option>
-  </datalist>
+<div class="container">
+  <!-- Barre de recherche -->
 
   <!-- Liste des 5 premiers résultats -->
-  <div class="resultats">
+  <h2 class="resultTitle hidden">Résultats</h2>
+  <div class="resultats hidden">
   </div>
 
   <!-- Formulaire de saisie des infos de l'item -->
+  <h2>Informations de l'item</h2>
   <p class="tmdb_key" data-tmdb="<%= "#{ENV['TMDB_KEY']}" %>"></p>
   <p class="spotify_key" data-spotify="<%= ENV['KEY_SPOTIFY_KEY'] %>" ></p>
   <p class="googlebook_key" data-google="<%= "#{ENV['GOOGLE_BOOK']}" %>" ></p>
