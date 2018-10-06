@@ -1,0 +1,32 @@
+.card {
+  height: 350px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  background-size: cover !important;
+  background-position: center;
+  color: white;
+  position: relative;
+}
+.card-description h2 {
+  position : absolute;
+  top: 20%;
+  margin-top: 0px;
+  font-size: 5em;
+  left: 25%;
+}
+.card-description input {
+  color: black;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  text-align: center;
+  opacity: 0.9;
+  border-radius: 0.2em;
+}
+.searchbar {
+  position: absolute;
+  top: 60%;
+  left: 27%;
+  display: flex;
+  justify-content: center;
+}

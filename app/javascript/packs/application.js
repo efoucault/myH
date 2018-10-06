@@ -24,10 +24,14 @@ searchButton.addEventListener('click', (evt) => {
   }
 });
 
+// Supprimer les résultats affichés précédemment
 function deleteExistingResults() {
-  // const resultats = document.querySelector(".resultats");
-  const resultats = document.querySelectorAll(".resultat");
-  resultats.forEach((resultat) => {
+  const resultats = document.querySelector(".resultats");
+  resultats.classList.remove("hidden");
+  const resultatTitre = document.querySelector(".resultTitle");
+  resultatTitre.classList.remove("hidden");
+  const Ensembleresultats = document.querySelectorAll(".resultat");
+  Ensembleresultats.forEach((resultat) => {
     resultat.parentNode.removeChild(resultat);
   });
 }
@@ -66,6 +70,7 @@ function CallTmdb(contenu) {
      .then(response => response.json())
      .then((data) => {
        deleteExistingResults();
+       viderFormulaire();
        var compteur;
        for (compteur = 4; compteur >= 0; compteur--) {
          const thumbnail = movieThumbnail(data, compteur);
@@ -96,7 +101,8 @@ function CallGoogleBooks(contenu) {
      })
      .then(response => response.json())
      .then((data) => {
-       deleteExistingResults()
+       deleteExistingResults();
+       viderFormulaire();
        var compteur;
        for (compteur = 4; compteur >= 0; compteur--) {
          const titre = data.items[compteur].volumeInfo.title;
@@ -142,7 +148,7 @@ function ClickItem(domaine, data) {
           commentaire.value = data.items[index].volumeInfo.description;
           titre.value = data.items[index].volumeInfo.title + " - " + data.items[index].volumeInfo.subtitle;
           artiste.value = data.items[index].volumeInfo.authors[0];
-          photo.value = bookThumbnail(data, index)
+          photo.value = bookThumbnail(data, index);
         }
         else if (domaine === "Musique") {
           console.log("Musique");
@@ -155,3 +161,15 @@ function ClickItem(domaine, data) {
   }
 }
 
+// A la recherche d'un nouvel item, vider les éléments précédemment renseignés
+function viderFormulaire() {
+  var commentaire = document.querySelector("#item_commentaire");
+  var titre = document.querySelector("#item_titre");
+  var artiste = document.querySelector("#item_artiste");
+  var commentaire = document.querySelector("#item_commentaire");
+  var photo = document.querySelector("#item_photo");
+  commentaire.value = "";
+  titre.value = "";
+  artiste.value = "";
+  photo.value = "";
+}
