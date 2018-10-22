@@ -39,8 +39,6 @@ function deleteExistingResults() {
 // Si categorie = Musique Fetch le nom d'un artiste
 function CallSpotify() {
   const artiste = document.querySelector("#item_artiste");
-  artiste.addEventListener('blur', (evt) => {
-    evt.preventDefault();
   //   fetch(`https://api.spotify.com/v1/search?q=${artiste.value}&type=artist&limit=5`, {
   //       method: "GET",
   //       headers: {
@@ -56,14 +54,13 @@ function CallSpotify() {
   //       const artisteImg = `<img src=${data.artists.items[0].images[0].url} height="100" width="100">`;
   //       artiste.insertAdjacentHTML("afterend", artisteImg);
   //     });
-  });
 }
 
   // Fetch un film par nom
 function CallTmdb(contenu) {
   const resultats = document.querySelector(".resultats")
   const movieKey = document.querySelector('.tmdb_key').dataset.tmdb;
-  const commentaire = document.querySelector("#item_commentaire");
+  const description = document.querySelector("#item_description");
   fetch(`https://api.themoviedb.org/3/search/movie?api_key=${movieKey}&language=fr&query=${contenu}&page=1&include_adult=false`, {
      method: "GET",
      })
@@ -129,26 +126,31 @@ function bookThumbnail(data, compteur) {
 // Au clic sur un des 5 résultats, alimentation des données de l'item
 function ClickItem(domaine, data) {
   const resultatsCliques = document.querySelectorAll(".resultat");
-  var commentaire = document.querySelector("#item_commentaire");
+  var description = document.querySelector("#item_description");
   var titre = document.querySelector("#item_titre");
   var artiste = document.querySelector("#item_artiste");
-  var commentaire = document.querySelector("#item_commentaire");
+  var categorie = document.querySelector("#item_categorie");
   var photo = document.querySelector("#item_photo");
+  var idExterne = document.querySelector("#item_id_externe");
   if (resultatsCliques !== null) {
     resultatsCliques.forEach((resultat) => {
       resultat.addEventListener("click", (event) => {
         const index = event.currentTarget.dataset.compteur;
         if (domaine === "Films") {
-          commentaire.value = data.results[index].overview;
+          description.value = data.results[index].overview;
           titre.value = data.results[index].title;
           artiste.value = "A ajouter";
           photo.value = movieThumbnail(data, index);
+          categorie.value = "Films";
+          idExterne.value = data.results[index].id;
         }
         else if (domaine === "Livres") {
-          commentaire.value = data.items[index].volumeInfo.description;
+          description.value = data.items[index].volumeInfo.description;
           titre.value = data.items[index].volumeInfo.title + " - " + data.items[index].volumeInfo.subtitle;
           artiste.value = data.items[index].volumeInfo.authors[0];
           photo.value = bookThumbnail(data, index);
+          categorie.value = "Livres";
+          idExterne.value = data.items[index].id
         }
         else if (domaine === "Musique") {
           console.log("Musique");
@@ -163,13 +165,16 @@ function ClickItem(domaine, data) {
 
 // A la recherche d'un nouvel item, vider les éléments précédemment renseignés
 function viderFormulaire() {
-  var commentaire = document.querySelector("#item_commentaire");
+  var description = document.querySelector("#item_description");
   var titre = document.querySelector("#item_titre");
   var artiste = document.querySelector("#item_artiste");
-  var commentaire = document.querySelector("#item_commentaire");
+  var categorie = document.querySelector("#item_categorie");
   var photo = document.querySelector("#item_photo");
-  commentaire.value = "";
+  var idExterne = document.querySelector("#item_id_externe");
+  description.value = "";
   titre.value = "";
   artiste.value = "";
   photo.value = "";
+  categorie.value = "";
+  idExterne.value = "";
 }
