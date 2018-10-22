@@ -2,13 +2,22 @@
   <%= @user.email %>
 </div><h1>user n</h1>
 
-<div class="items">
-  <% @user.items.each do |item| %>
-    <%= item.titre %>
-    <%= item.artiste %>
-    <%= item.note %>
-    <%= item.commentaire %>
-    <%= item.age %>
-    <%= link_to "Show", user_item_path(@user, item) %><br>
-  <% end %>
+<div class="container">
+  <div class="items">
+    <% @user.items.each do |item| %>
+      <div class="item">
+        <div class="photo">
+          <img src="<%= item.photo %>" alt="">
+        </div>
+        <div class="contenuUser">
+          <%= item.titre %><br>
+          <%= item.artiste %><br>
+          <%= item.created_at %><br>
+          <%= item.note %><br>
+          <%= item.age %><br>
+          <%= link_to "Show", user_item_path(@user, item) %><br>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

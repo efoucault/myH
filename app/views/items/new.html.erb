@@ -35,12 +35,15 @@
   <p class="spotify_key" data-spotify="<%= ENV['KEY_SPOTIFY_KEY'] %>" ></p>
   <p class="googlebook_key" data-google="<%= "#{ENV['GOOGLE_BOOK']}" %>" ></p>
   <%= simple_form_for [@user, @item] do |f| %>
+    <%= f.input :categorie, as: :hidden %>
+    <%= f.input :id_externe, as: :hidden %>
     <%= f.input :titre %>
     <p><%= f.input :artiste, class: "artiste" %></p>
+    <%= f.input :description %>
+    <%= f.input :photo %>
     <%= f.input :note %>
     <%= f.input :commentaire %>
     <%= f.input :age %>
-    <%= f.input :photo %>
-    <%= f.submit "Ajouter l'item" %>
+    <%= f.submit "Ajouter l'item", class: "btn btn-primary" %>
   <% end %>
 </div>

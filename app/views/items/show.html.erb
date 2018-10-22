@@ -1,7 +1,20 @@
-<h1><%= @item.titre %></h1>
-<%= @item.categorie %>
-<%= @item.artiste  %>
-<%= @item.commentaire  %>
-<%= @item.note  %>
-<%= @item.age  %>
-<%= link_to "Edit", edit_user_item_path(@user, @item) %></li>
+<div class="card" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1495446815901-a7297e633e8d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=3ad3ef89775ee46b86723c2fa64b6805&auto=format&fit=crop&w=1350&q=80');">
+  <div class="card-description">
+    <h2><%=  @item.titre %></h2>
+  </div>
+</div>
+<div class="container">
+  <div class="itemsDetail">
+    <div class="photo">
+      <img src="<%= @item.photo %>" alt="">
+    </div>
+    <div class="contenu">
+      <%= @item.categorie %>
+      <p><strong>Artiste : </strong> <%= @item.artiste %></p> <br>
+      <p><strong>Description : </strong> <%= @item.commentaire %></p> <br>
+      <p><strong>Note : </strong> <%= @item.note %></p> <br>
+      <p><strong>Age : </strong> <%= @item.age %></p> <br>
+      <%= link_to "Edit", edit_user_item_path(@user, @item) %></li>
+    </div>
+  </div>
+</div>
